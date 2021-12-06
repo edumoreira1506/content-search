@@ -24,6 +24,12 @@
       "@Configs/*": [
         "src/configs/*"
       ],
+      "@Clients/*": [
+        "src/clients/*"
+      ],
+      "@Aggregators/*": [
+        "src/aggregators/*"
+      ],
       "@Routes/*": [
         "src/routes/*"
       ],

@@ -29,7 +29,9 @@ module.exports = {
           "@Middlewares": "./src/middlewares",
           "@Services": "./src/services",
           "@Schemas": "./src/schemas",
-          "@Docs": "./src/docs"
+          "@Docs": "./src/docs",
+          "@Aggregators": "./src/aggregators",
+          "@Clients": "./src/clients"
         },
       },
     ],
