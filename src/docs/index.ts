@@ -1,1 +1,5 @@
-export default {}
+import breederDocs from './breeder'
+
+export default {
+  ...breederDocs,
+}
