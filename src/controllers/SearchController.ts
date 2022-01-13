@@ -15,6 +15,14 @@ class SearchController {
 
     return BaseController.successResponse(res, { breeders })
   }
+
+  @BaseController.errorHandler()
+  async getBreeder(req: Request, res: Response) {
+    const breederId = req?.params?.breederId
+    const data = await SearchAggregator.getBreeder(breederId)
+
+    return BaseController.successResponse(res, data)
+  }
 }
 
 export default new SearchController()
