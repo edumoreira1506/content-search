@@ -18,6 +18,12 @@ export class SearchAggregator {
 
     return breeders
   }
+
+  async getBreeder(breederId: string) {
+    const breeder = await this._poultryServiceClient.getBreeder(breederId)
+
+    return { breeder }
+  }
 }
 
 export default new SearchAggregator(PoultryServiceClient)

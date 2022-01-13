@@ -8,7 +8,16 @@ const breederDocs = {
       description: 'Route to find breeders',
       queryParams: [{ type: 'string', name: 'keyword' }]
     },
-  ])
+  ]),
+  ...createDoc('/breeders/{breederId}', ['Get breeder'], [
+    {
+      method: 'get',
+      title: 'Get breeder',
+      description: 'Route to get breeder',
+    }
+  ], {
+    pathVariables: [{ type: 'string', name: 'breederId' }]
+  })
 }
 
 export default breederDocs
