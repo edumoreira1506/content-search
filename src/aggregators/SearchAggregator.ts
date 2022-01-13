@@ -21,8 +21,9 @@ export class SearchAggregator {
 
   async getBreeder(breederId: string) {
     const breeder = await this._poultryServiceClient.getBreeder(breederId)
+    const poultries = await this._poultryServiceClient.getPoultries(breederId, {})
 
-    return { breeder }
+    return { breeder, poultries }
   }
 }
 
