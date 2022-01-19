@@ -23,6 +23,15 @@ class SearchController {
 
     return BaseController.successResponse(res, data)
   }
+
+  @BaseController.errorHandler()
+  async getPoultry(req: Request, res: Response) {
+    const breederId = req?.params?.breederId
+    const poultryId = req?.params?.poultryId
+    const data = await SearchAggregator.getPoultry(breederId, poultryId)
+
+    return BaseController.successResponse(res, data)
+  }
 }
 
 export default new SearchController()
