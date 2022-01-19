@@ -1,16 +1,22 @@
 import {
   PoultryServiceClient as IPoultryServiceClient,
+  AdvertisingServiceClient as IAdvertisingServiceClient,
 } from '@cig-platform/core'
 
 import PoultryServiceClient from '@Clients/PoultryServiceClient'
+import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
 
 export class SearchAggregator {
   private _poultryServiceClient: IPoultryServiceClient;
+  private _advertisingServiceClient: IAdvertisingServiceClient;
   
-  constructor(poultryServiceClient: IPoultryServiceClient) {
+  constructor(poultryServiceClient: IPoultryServiceClient, advertisingServiceClient: IAdvertisingServiceClient) {
     this._poultryServiceClient = poultryServiceClient
+    this._advertisingServiceClient = advertisingServiceClient
 
     this.getBreeders = this.getBreeders.bind(this)
+    this.getPoultry = this.getPoultry.bind(this)
+    this.getBreeder = this.getBreeder.bind(this)
   }
 
   async getBreeders(keyword = '') {
@@ -29,9 +35,21 @@ export class SearchAggregator {
 
   async getPoultry(breederId: string, poultryId: string) {
     const poultry = await this._poultryServiceClient.getPoultry(breederId, poultryId)
-
-    return { poultry }
+    const poultryImages = await this._poultryServiceClient.getPoultryImages(breederId, poultryId)
+    const registers = await this._poultryServiceClient.getRegisters(breederId, poultryId)
+    const measurementAndWeigthing = registers.filter(register => register.type === 'MEDIÇÃO E PESAGEM')
+    const vaccines = registers.filter(register => register.type === 'VACINAÇÃO')
+    const merchants = await this._advertisingServiceClient.getMerchants(breederId)
+    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id)
+    
+    return {
+      poultry: { ...poultry, images: poultryImages },
+      registers,
+      advertisings,
+      vaccines,
+      measurementAndWeigthing
+    }
   }
 }
 
-export default new SearchAggregator(PoultryServiceClient)
+export default new SearchAggregator(PoultryServiceClient, AdvertisingServiceClient)
