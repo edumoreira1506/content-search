@@ -34,6 +34,7 @@ export class SearchAggregator {
   }
 
   async getPoultry(breederId: string, poultryId: string) {
+    const breeder = await this._poultryServiceClient.getBreeder(breederId)
     const poultry = await this._poultryServiceClient.getPoultry(breederId, poultryId)
     const poultryImages = await this._poultryServiceClient.getPoultryImages(breederId, poultryId)
     const registers = await this._poultryServiceClient.getRegisters(breederId, poultryId)
@@ -43,7 +44,7 @@ export class SearchAggregator {
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id)
     
     return {
-      poultry: { ...poultry, images: poultryImages },
+      poultry: { ...poultry, images: poultryImages, code: `${breeder.code}-${poultry.number}` },
       registers,
       advertisings,
       vaccines,
