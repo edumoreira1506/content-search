@@ -42,13 +42,16 @@ export class SearchAggregator {
     const vaccines = registers.filter(register => register.type === 'VACINAÇÃO')
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id)
-    
+    const breederContacts = await this._poultryServiceClient.getContacts(breederId)
+    const whatsAppContacts = breederContacts.filter(contact => contact.type === 'WHATS_APP')
+
     return {
       poultry: { ...poultry, images: poultryImages, code: `${breeder.code}-${poultry.number}` },
       registers,
       advertisings,
       vaccines,
-      measurementAndWeigthing
+      measurementAndWeigthing,
+      whatsAppContacts
     }
   }
 }
