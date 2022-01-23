@@ -17,6 +17,15 @@ const breederDocs = {
     }
   ], {
     pathVariables: [{ type: 'string', name: 'breederId' }]
+  }),
+  ...createDoc('/breeders/{breederId}/poultries', ['Get breeder poultries'], [
+    {
+      method: 'get',
+      title: 'Get breeder poultries',
+      description: 'Route to get breeder poultries',
+    }
+  ], {
+    pathVariables: [{ type: 'string', name: 'breederId' }]
   })
 }
 
