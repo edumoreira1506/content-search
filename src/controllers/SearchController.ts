@@ -6,6 +6,8 @@ import SearchAggregator from '@Aggregators/SearchAggregator'
 class SearchController {
   constructor() {
     this.getBreeders = this.getBreeders.bind(this)
+    this.getBreederPoultries = this.getBreederPoultries.bind(this)
+    this.getPoultry = this.getPoultry.bind(this)
   }
 
   @BaseController.errorHandler()
@@ -20,6 +22,14 @@ class SearchController {
   async getBreeder(req: Request, res: Response) {
     const breederId = req?.params?.breederId
     const data = await SearchAggregator.getBreeder(breederId)
+
+    return BaseController.successResponse(res, data)
+  }
+
+  @BaseController.errorHandler()
+  async getBreederPoultries(req: Request, res: Response) {
+    const breederId = req?.params?.breederId
+    const data = await SearchAggregator.getBreederPoultries(breederId)
 
     return BaseController.successResponse(res, data)
   }
