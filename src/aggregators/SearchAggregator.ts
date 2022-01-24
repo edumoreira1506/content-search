@@ -2,6 +2,7 @@ import {
   PoultryServiceClient as IPoultryServiceClient,
   AdvertisingServiceClient as IAdvertisingServiceClient,
 } from '@cig-platform/core'
+import { PoultryGenderCategoryEnum, RegisterTypeEnum, BreederContactTypeEnum } from '@cig-platform/enums'
 
 import PoultryServiceClient from '@Clients/PoultryServiceClient'
 import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
@@ -39,10 +40,10 @@ export class SearchAggregator {
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id)
     const poultryIds = advertisings.map(a => a.externalId).join(',')
     const forSale = poultryIds.length ? await this._poultryServiceClient.getPoultries(breederId, { poultryIds }) : []
-    const reproductives = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'REPRODUTOR'})
-    const matrixes = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'MATRIZ' })
-    const males = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'FRANGO' })
-    const females = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'FRANGA' })
+    const reproductives = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Reproductive })
+    const matrixes = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Matrix })
+    const males = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.MaleChicken })
+    const females = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.FemaleChicken })
 
     return {
       forSale,
@@ -58,12 +59,12 @@ export class SearchAggregator {
     const poultry = await this._poultryServiceClient.getPoultry(breederId, poultryId)
     const poultryImages = await this._poultryServiceClient.getPoultryImages(breederId, poultryId)
     const registers = await this._poultryServiceClient.getRegisters(breederId, poultryId)
-    const measurementAndWeigthing = registers.filter(register => register.type === 'MEDIÇÃO E PESAGEM')
-    const vaccines = registers.filter(register => register.type === 'VACINAÇÃO')
+    const measurementAndWeigthing = registers.filter(register => register.type === RegisterTypeEnum.MeasurementAndWeighing)
+    const vaccines = registers.filter(register => register.type === RegisterTypeEnum.Vaccination)
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id)
     const breederContacts = await this._poultryServiceClient.getContacts(breederId)
-    const whatsAppContacts = breederContacts.filter(contact => contact.type === 'WHATS_APP')
+    const whatsAppContacts = breederContacts.filter(contact => contact.type === BreederContactTypeEnum.WHATS_APP)
 
     return {
       poultry: { ...poultry, images: poultryImages, code: `${breeder.code}-${poultry.number}` },
