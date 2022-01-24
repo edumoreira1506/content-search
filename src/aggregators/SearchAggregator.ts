@@ -38,12 +38,11 @@ export class SearchAggregator {
     const merchant = merchants[0]
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id)
     const poultryIds = advertisings.map(a => a.externalId).join(',')
-    const forSale = await this._poultryServiceClient.getPoultries(breederId, { poultryIds })
+    const forSale = poultryIds.length ? await this._poultryServiceClient.getPoultries(breederId, { poultryIds }) : []
     const reproductives = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'REPRODUTOR'})
     const matrixes = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'MATRIZ' })
     const males = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'FRANGO' })
     const females = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: 'FRANGA' })
- 
 
     return {
       forSale,
