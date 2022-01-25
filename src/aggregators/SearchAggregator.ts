@@ -1,19 +1,27 @@
 import {
   PoultryServiceClient as IPoultryServiceClient,
   AdvertisingServiceClient as IAdvertisingServiceClient,
+  AccountServiceClient as IAccountServiceClient,
 } from '@cig-platform/core'
 import { PoultryGenderCategoryEnum, RegisterTypeEnum, BreederContactTypeEnum } from '@cig-platform/enums'
 
 import PoultryServiceClient from '@Clients/PoultryServiceClient'
 import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
+import AccountServiceClient from '@Clients/AccountServiceClient'
 
 export class SearchAggregator {
   private _poultryServiceClient: IPoultryServiceClient;
   private _advertisingServiceClient: IAdvertisingServiceClient;
+  private _accountServiceClient: IAccountServiceClient;
   
-  constructor(poultryServiceClient: IPoultryServiceClient, advertisingServiceClient: IAdvertisingServiceClient) {
+  constructor(
+    poultryServiceClient: IPoultryServiceClient,
+    advertisingServiceClient: IAdvertisingServiceClient,
+    accountServiceClient: IAccountServiceClient
+  ) {
     this._poultryServiceClient = poultryServiceClient
     this._advertisingServiceClient = advertisingServiceClient
+    this._accountServiceClient = accountServiceClient
 
     this.getBreeders = this.getBreeders.bind(this)
     this.getPoultry = this.getPoultry.bind(this)
@@ -67,10 +75,20 @@ export class SearchAggregator {
     const whatsAppContacts = breederContacts.filter(contact => contact.type === BreederContactTypeEnum.WHATS_APP)
     const advertisingsWithQuestions = await Promise.all(advertisings.map(async advertising => {
       const questions = await this._advertisingServiceClient.getAdvertisingQuestions(merchants?.[0]?.id, advertising.id)
+      const questionsWithUser = await Promise.all(questions.map(async (question) => {
+        const user = await this._accountServiceClient.getUser(question.externalId)
+        const answersWithUser = await Promise.all(question.answers.map(async (answer) => {
+          const user = await this._accountServiceClient.getUser(answer.externalId)
+
+          return { ...answer, user }
+        }))
+
+        return { ...question, answers: answersWithUser, user }
+      }))
 
       return {
         ...advertising,
-        questions
+        questions: questionsWithUser
       }
     }))
 
@@ -80,9 +98,10 @@ export class SearchAggregator {
       advertisings: advertisingsWithQuestions,
       vaccines,
       measurementAndWeigthing,
-      whatsAppContacts
+      whatsAppContacts,
+      breeder
     }
   }
 }
 
-export default new SearchAggregator(PoultryServiceClient, AdvertisingServiceClient)
+export default new SearchAggregator(PoultryServiceClient, AdvertisingServiceClient, AccountServiceClient)
