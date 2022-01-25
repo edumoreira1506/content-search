@@ -65,11 +65,19 @@ export class SearchAggregator {
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id)
     const breederContacts = await this._poultryServiceClient.getContacts(breederId)
     const whatsAppContacts = breederContacts.filter(contact => contact.type === BreederContactTypeEnum.WHATS_APP)
+    const advertisingsWithQuestions = await Promise.all(advertisings.map(async advertising => {
+      const questions = await this._advertisingServiceClient.getAdvertisingQuestions(merchants?.[0]?.id, advertising.id)
+
+      return {
+        ...advertising,
+        questions
+      }
+    }))
 
     return {
       poultry: { ...poultry, images: poultryImages, code: `${breeder.code}-${poultry.number}` },
       registers,
-      advertisings,
+      advertisings: advertisingsWithQuestions,
       vaccines,
       measurementAndWeigthing,
       whatsAppContacts
