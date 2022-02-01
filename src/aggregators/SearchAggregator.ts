@@ -70,7 +70,7 @@ export class SearchAggregator {
     const measurementAndWeigthing = registers.filter(register => register.type === RegisterTypeEnum.MeasurementAndWeighing)
     const vaccines = registers.filter(register => register.type === RegisterTypeEnum.Vaccination)
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
-    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id)
+    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants?.[0]?.id, poultry.id, false)
     const breederContacts = await this._poultryServiceClient.getContacts(breederId)
     const whatsAppContacts = breederContacts.filter(contact => contact.type === BreederContactTypeEnum.WHATS_APP)
     const advertisingsWithQuestions = await Promise.all(advertisings.map(async advertising => {
