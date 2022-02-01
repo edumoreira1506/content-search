@@ -45,7 +45,7 @@ export class SearchAggregator {
   async getBreederPoultries(breederId: string) {
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
     const merchant = merchants[0]
-    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id)
+    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id, undefined, false)
     const poultryIds = advertisings.map(a => a.externalId).join(',')
     const forSale = poultryIds.length ? await this._poultryServiceClient.getPoultries(breederId, { poultryIds }) : []
     const reproductives = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Reproductive })
