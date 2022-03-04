@@ -29,7 +29,7 @@ class SearchController {
   @BaseController.errorHandler()
   async getBreederPoultries(req: Request, res: Response) {
     const breederId = req?.params?.breederId
-    const pagination = JSON.parse(req?.query?.pagination?.toString() ?? '')
+    const pagination = JSON.parse(req?.query?.pagination?.toString() ?? '{}')
     const data = await SearchAggregator.getBreederPoultries(breederId, pagination)
 
     return BaseController.successResponse(res, data)
