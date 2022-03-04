@@ -25,7 +25,10 @@ const breederDocs = {
       description: 'Route to get breeder poultries',
     }
   ], {
-    pathVariables: [{ type: 'string', name: 'breederId' }]
+    pathVariables: [
+      { type: 'string', name: 'breederId' },
+      { type: 'string', name: 'pagination' }
+    ]
   })
 }
 
