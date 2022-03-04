@@ -42,23 +42,36 @@ export class SearchAggregator {
     return { breeder: { ...breeder, contacts } , poultries }
   }
 
-  async getBreederPoultries(breederId: string) {
+  async getBreederPoultries(breederId: string, pagination: {
+    forSale?: number;
+    reproductives?: number;
+    matrixes?: number;
+    males?: number;
+    females?: number;
+  }) {
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
     const merchant = merchants[0]
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id, undefined, false)
     const poultryIds = advertisings.map(a => a.externalId).join(',')
-    const forSale = poultryIds.length ? await this._poultryServiceClient.getPoultries(breederId, { poultryIds }) : []
-    const reproductives = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Reproductive })
-    const matrixes = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Matrix })
-    const males = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.MaleChicken })
-    const females = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.FemaleChicken })
+    const { poultries: forSale, pages: forSalePages } = await this._poultryServiceClient.getPoultries(breederId, { poultryIds, page: pagination.forSale })
+    const { poultries: reproductives, pages: reproductivesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Reproductive, page: pagination.reproductives })
+    const { poultries: matrixes, pages: matrixesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Matrix, page: pagination.matrixes })
+    const { poultries: males, pages: malesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.MaleChicken, page: pagination.males })
+    const { poultries: females, pages: femalesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.FemaleChicken, page: pagination.females })
 
     return {
       forSale,
       reproductives,
       matrixes,
       males,
-      females
+      females,
+      pagination: {
+        forSale: forSalePages,
+        reproductives: reproductivesPages,
+        matrixes: matrixesPages,
+        males: malesPages,
+        females: femalesPages
+      }
     }
   }
 
