@@ -23,9 +23,14 @@ const breederDocs = {
       method: 'get',
       title: 'Get breeder poultries',
       description: 'Route to get breeder poultries',
+      queryParams: [
+        { type: 'string', name: 'pagination' },
+      ]
     }
   ], {
-    pathVariables: [{ type: 'string', name: 'breederId' }]
+    pathVariables: [
+      { type: 'string', name: 'breederId' },
+    ]
   })
 }
 
