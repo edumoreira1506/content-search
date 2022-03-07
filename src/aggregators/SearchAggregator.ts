@@ -48,7 +48,7 @@ export class SearchAggregator {
     matrixes?: number;
     males?: number;
     females?: number;
-  }) {
+  } = {}) {
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
     const merchant = merchants[0]
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id, undefined, false)
