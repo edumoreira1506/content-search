@@ -10,9 +10,9 @@ import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
 import AccountServiceClient from '@Clients/AccountServiceClient'
 
 export class SearchAggregator {
-  private _poultryServiceClient: IPoultryServiceClient;
-  private _advertisingServiceClient: IAdvertisingServiceClient;
-  private _accountServiceClient: IAccountServiceClient;
+  private _poultryServiceClient: IPoultryServiceClient
+  private _advertisingServiceClient: IAdvertisingServiceClient
+  private _accountServiceClient: IAccountServiceClient
   
   constructor(
     poultryServiceClient: IPoultryServiceClient,
