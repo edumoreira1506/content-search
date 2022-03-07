@@ -12,7 +12,8 @@ describe('Search actions', () => {
 
       return {
         ...breeder,
-        foundationDate: breeder.foundationDate.toString()
+        foundationDate: breeder.foundationDate.toString(),
+        createdAt: breeder.createdAt.toString(),
       }
     })
     const mockGetBreeders = jest.fn().mockResolvedValue(breeders)
@@ -32,7 +33,8 @@ describe('Search actions', () => {
   it('can find breeder', async () => {
     const breeder = {
       ...breederFactory(),
-      foundationDate: new Date().toString() as any
+      foundationDate: new Date().toString() as any,
+      createdAt: new Date().toString() as any,
     } as Partial<IBreeder>
 
     delete breeder['description']
