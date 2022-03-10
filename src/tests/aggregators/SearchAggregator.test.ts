@@ -1,5 +1,5 @@
 import { SearchAggregator } from '@Aggregators/SearchAggregator'
-import { breederFactory, merchantFactory, poultryFactory, userFactory } from '@cig-platform/factories'
+import { advertisingFactory, breederFactory, merchantFactory, poultryFactory, userFactory } from '@cig-platform/factories'
 
 describe('SearchAggregator', () => {
   describe('.getBreeders', () => {
@@ -57,9 +57,10 @@ describe('SearchAggregator', () => {
     it('returns poultries', async () => {
       const breeder = breederFactory()
       const merchant = merchantFactory()
+      const advertising = advertisingFactory()
       const poultries = [] as any[]
       const merchants = [merchant]
-      const advertisings = [] as any []
+      const advertisings = [advertising]
       const mockPoultryServiceClient: any = {
         getPoultries: jest.fn().mockResolvedValue({
           poultries,
