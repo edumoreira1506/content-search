@@ -30,6 +30,7 @@ export class SearchAggregator {
     this.getPoultry = this.getPoultry.bind(this)
     this.getBreeder = this.getBreeder.bind(this)
     this.searchAdvertisings = this.searchAdvertisings.bind(this)
+    this.getAdvertisingsHome = this.getAdvertisingsHome.bind(this)
   }
 
   getPoultriesEntireData = async (poultries: Poultry[] = []) => Promise.all(poultries.map(async (poultry: Poultry) => {
@@ -43,6 +44,41 @@ export class SearchAggregator {
 
     return { poultry, advertising: advertisings?.[0], breeder, measurementAndWeight: measurementAndWeight?.[0] }
   }))
+
+  async getAdvertisingsHome() {
+    const { poultries: femaleChickens } = await this._poultryServiceClient.findPoultries({
+      genderCategory: [PoultryGenderCategoryEnum.MaleChicken],
+      forSale: 'true',
+      page: 0,
+    })
+    const { poultries: maleChickens } = await this._poultryServiceClient.findPoultries({
+      genderCategory: [PoultryGenderCategoryEnum.FemaleChicken],
+      forSale: 'true',
+      page: 0,
+    })
+    const { poultries: matrixes } = await this._poultryServiceClient.findPoultries({
+      genderCategory: [PoultryGenderCategoryEnum.Matrix],
+      forSale: 'true',
+      page: 0,
+    })
+    const { poultries: reproductives } = await this._poultryServiceClient.findPoultries({
+      genderCategory: [PoultryGenderCategoryEnum.Reproductive],
+      forSale: 'true',
+      page: 0,
+    })
+
+    const femaleChickensWithAdvertising = await this.getPoultriesEntireData(femaleChickens)
+    const maleChickensWithAdvertising = await this.getPoultriesEntireData(maleChickens)
+    const reproductivesWithAdvertising = await this.getPoultriesEntireData(reproductives)
+    const matrixesWithAdvertising = await this.getPoultriesEntireData(matrixes)
+
+    return {
+      femaleChickens: femaleChickensWithAdvertising,
+      maleChickens: maleChickensWithAdvertising,
+      reproductives: reproductivesWithAdvertising,
+      matrixes: matrixesWithAdvertising
+    }
+  }
 
   async searchAdvertisings({
     gender,
