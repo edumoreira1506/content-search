@@ -1,7 +1,7 @@
 import { createDoc } from '@cig-platform/docs'
 
 const breederDocs = {
-  ...createDoc('/breeders', ['Search breeders'], [
+  ...createDoc('/breeders', ['Breeders'], [
     {
       method: 'get',
       title: 'Search breeders',
@@ -9,7 +9,7 @@ const breederDocs = {
       queryParams: [{ type: 'string', name: 'keyword' }]
     },
   ]),
-  ...createDoc('/breeders/{breederId}', ['Get breeder'], [
+  ...createDoc('/breeders/{breederId}', ['Breeders'], [
     {
       method: 'get',
       title: 'Get breeder',
@@ -18,7 +18,7 @@ const breederDocs = {
   ], {
     pathVariables: [{ type: 'string', name: 'breederId' }]
   }),
-  ...createDoc('/breeders/{breederId}/poultries', ['Get breeder poultries'], [
+  ...createDoc('/breeders/{breederId}/poultries', ['Poultries'], [
     {
       method: 'get',
       title: 'Get breeder poultries',
