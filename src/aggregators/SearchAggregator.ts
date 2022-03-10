@@ -4,10 +4,13 @@ import {
   AccountServiceClient as IAccountServiceClient,
 } from '@cig-platform/core'
 import { PoultryGenderCategoryEnum, RegisterTypeEnum, BreederContactTypeEnum } from '@cig-platform/enums'
+import { IPoultry } from '@cig-platform/types'
 
 import PoultryServiceClient from '@Clients/PoultryServiceClient'
 import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
 import AccountServiceClient from '@Clients/AccountServiceClient'
+
+type Poultry = IPoultry & { mainImage: string; breederId: string }
 
 export class SearchAggregator {
   private _poultryServiceClient: IPoultryServiceClient
@@ -26,6 +29,71 @@ export class SearchAggregator {
     this.getBreeders = this.getBreeders.bind(this)
     this.getPoultry = this.getPoultry.bind(this)
     this.getBreeder = this.getBreeder.bind(this)
+    this.searchAdvertisings = this.searchAdvertisings.bind(this)
+  }
+
+  getPoultriesEntireData = async (poultries: Poultry[] = []) => Promise.all(poultries.map(async (poultry: Poultry) => {
+    const merchants = await this._advertisingServiceClient.getMerchants(poultry.breederId)
+    const breeder = await this._poultryServiceClient.getBreeder(poultry.breederId)
+
+    if (!merchants.length) return { poultry, breeder }
+
+    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants[0].id, poultry.id, false)
+    const measurementAndWeight = await this._poultryServiceClient.getRegisters(breeder.id, poultry.id, RegisterTypeEnum.MeasurementAndWeighing)
+
+    return { poultry, advertising: advertisings?.[0], breeder, measurementAndWeight: measurementAndWeight?.[0] }
+  }))
+
+  async searchAdvertisings({
+    gender,
+    type,
+    tail,
+    dewlap,
+    crest,
+    keyword,
+    genderCategory,
+    prices,
+    sort,
+    favoriteIds,
+    page = 0
+  }: {
+    gender?: string[];
+    type?: string[];
+    tail?: string[];
+    dewlap?: string[];
+    crest?: string[];
+    keyword?: string;
+    genderCategory?: string[];
+    prices?: { min: number; max: number };
+    sort?: string;
+    favoriteIds?: string;
+    page?: number;
+  }) {
+    const { poultries, pages } = await this._poultryServiceClient.findPoultries({
+      crest,
+      description: keyword,
+      dewlap,
+      forSale: 'true',
+      gender,
+      genderCategory,
+      name: keyword,
+      tail,
+      type,
+      prices,
+      sort,
+      page,
+    })
+    const poultriesWithAllData = await this.getPoultriesEntireData(poultries)
+
+    const filteredPoultries = poultriesWithAllData.filter(p => {
+      const favoritedIdsArray = favoriteIds?.split(',').filter(Boolean) ?? []
+
+      if (!favoritedIdsArray.length || !p.advertising?.id) return p
+
+      return favoritedIdsArray.includes(p.advertising.id)
+    })
+
+    return { advertisings: filteredPoultries, pages }
   }
 
   async getBreeders(keyword = '') {
