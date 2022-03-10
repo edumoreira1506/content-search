@@ -9,6 +9,14 @@ class SearchController {
     this.getBreederPoultries = this.getBreederPoultries.bind(this)
     this.getPoultry = this.getPoultry.bind(this)
     this.getAdvertisings = this.getAdvertisings.bind(this)
+    this.getAdvertisingsHome = this.getAdvertisingsHome.bind(this)
+  }
+
+  @BaseController.errorHandler()
+  async getAdvertisingsHome(_: Request, res: Response) {
+    const data = await SearchAggregator.getAdvertisingsHome()
+
+    return BaseController.successResponse(res, data)
   }
 
   @BaseController.errorHandler()

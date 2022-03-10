@@ -9,6 +9,11 @@ router.get(
   SearchController.getAdvertisings
 )
 
+router.get(
+  '/home',
+  SearchController.getAdvertisingsHome
+)
+
 router.get('/breeders', SearchController.getBreeders)
 
 router.get('/breeders/:breederId', SearchController.getBreeder)

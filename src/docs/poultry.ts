@@ -1,7 +1,7 @@
 import { createDoc } from '@cig-platform/docs'
 
 const poultryDocs = {
-  ...createDoc('/breeders/{breederId}/poultries/{poultryId}', ['Get poultry'], [
+  ...createDoc('/breeders/{breederId}/poultries/{poultryId}', ['Poultries'], [
     {
       method: 'get',
       title: 'Get poultry',
@@ -10,7 +10,7 @@ const poultryDocs = {
   ], {
     pathVariables: [{ type: 'string', name: 'breederId' }, { type: 'string', name: 'poultryId' }]
   }),
-  ...createDoc('/search', ['Search'], [
+  ...createDoc('/search', ['Advertisings'], [
     {
       method: 'get',
       title: 'Search advertisings',
@@ -61,6 +61,13 @@ const poultryDocs = {
           name: 'favoriteIds'
         },
       ]
+    },
+  ]),
+  ...createDoc('/home', ['Advertisings'], [
+    {
+      method: 'get',
+      title: 'Get advertisings home',
+      description: 'Route to get advertisings home',
     },
   ]),
 }
