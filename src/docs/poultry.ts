@@ -63,6 +63,13 @@ const poultryDocs = {
       ]
     },
   ]),
+  ...createDoc('/home', ['Home'], [
+    {
+      method: 'get',
+      title: 'Get advertisings home',
+      description: 'Route to get advertisings home',
+    },
+  ]),
 }
 
 export default poultryDocs
