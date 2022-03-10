@@ -4,6 +4,11 @@ import SearchController from '@Controllers/SearchController'
 
 const router = express.Router()
 
+router.get(
+  '/search',
+  SearchController.getAdvertisings
+)
+
 router.get('/breeders', SearchController.getBreeders)
 
 router.get('/breeders/:breederId', SearchController.getBreeder)
