@@ -157,7 +157,9 @@ export class SearchAggregator {
     const merchant = merchants[0]
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id, undefined, false)
     const poultryIds = advertisings.map(a => a.externalId).join(',')
-    const { poultries: forSale, pages: forSalePages } = await this._poultryServiceClient.getPoultries(breederId, { poultryIds, page: pagination.forSale })
+    const { poultries: forSale, pages: forSalePages } = poultryIds.length
+      ? await this._poultryServiceClient.getPoultries(breederId, { poultryIds, page: pagination.forSale })
+      : { poultries: [], pages: 0 }
     const { poultries: reproductives, pages: reproductivesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Reproductive, page: pagination.reproductives })
     const { poultries: matrixes, pages: matrixesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Matrix, page: pagination.matrixes })
     const { poultries: males, pages: malesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.MaleChicken, page: pagination.males })
