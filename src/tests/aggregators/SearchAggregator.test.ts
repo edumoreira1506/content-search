@@ -31,6 +31,7 @@ describe('SearchAggregator', () => {
         getBreeder: jest.fn().mockResolvedValue(breeder),
         getContacts: jest.fn().mockResolvedValue(contacts),
         getPoultries: jest.fn().mockResolvedValue(poultries),
+        getBreederImages: jest.fn().mockResolvedValue(breeder.images)
       }
       const searchAggregator = new SearchAggregator(
         mockPoultryServiceClient,
@@ -50,6 +51,7 @@ describe('SearchAggregator', () => {
       expect(mockPoultryServiceClient.getBreeder).toHaveBeenCalledWith(breeder.id)
       expect(mockPoultryServiceClient.getContacts).toHaveBeenCalledWith(breeder.id)
       expect(mockPoultryServiceClient.getPoultries).toHaveBeenCalledWith(breeder.id, {})
+      expect(mockPoultryServiceClient.getBreederImages).toHaveBeenCalledWith(breeder.id)
     })
   })
 
