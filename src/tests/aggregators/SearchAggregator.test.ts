@@ -12,6 +12,7 @@ describe('SearchAggregator', () => {
       const searchAggregator = new SearchAggregator(
         mockPoultryServiceClient,
         {} as any,
+        {} as any,
         {} as any
       )
 
@@ -35,6 +36,7 @@ describe('SearchAggregator', () => {
       }
       const searchAggregator = new SearchAggregator(
         mockPoultryServiceClient,
+        {} as any,
         {} as any,
         {} as any
       )
@@ -76,6 +78,7 @@ describe('SearchAggregator', () => {
       const searchAggregator = new SearchAggregator(
         mockPoultryServiceClient,
         mockAdvertisingServiceClient,
+        {} as any,
         {} as any
       )
 
@@ -112,6 +115,8 @@ describe('SearchAggregator', () => {
       const contacts = [] as any[]
       const advertisings = [] as any[]
       const questions = [] as any[]
+      const favorites = [] as any[]
+      const deals = [] as any[]
       const mockPoultryServiceClient: any = {
         getBreeder: jest.fn().mockResolvedValue(breeder),
         getPoultry: jest.fn().mockResolvedValue(poultry),
@@ -122,15 +127,20 @@ describe('SearchAggregator', () => {
       const mockAdvertisingServiceClient: any = {
         getMerchants: jest.fn().mockResolvedValue([merchant]),
         getAdvertisings: jest.fn().mockResolvedValue(advertisings),
-        getAdvertisingQuestions: jest.fn().mockResolvedValue(questions)
+        getAdvertisingQuestions: jest.fn().mockResolvedValue(questions),
+        getAdvertisingFavorites: jest.fn().mockResolvedValue(favorites)
       }
       const mockAccountServiceClient: any = {
         getUser: jest.fn().mockResolvedValue(user)
       }
+      const mockDealServiceClient: any = {
+        getDeals: jest.fn().mockResolvedValue(deals)
+      }
       const searchAggregator = new SearchAggregator(
         mockPoultryServiceClient,
         mockAdvertisingServiceClient,
-        mockAccountServiceClient
+        mockAccountServiceClient,
+        mockDealServiceClient
       )
 
       const data = await searchAggregator.getPoultry(breeder.id, poultry.id)
