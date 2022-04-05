@@ -2,6 +2,7 @@ import {
   PoultryServiceClient as IPoultryServiceClient,
   AdvertisingServiceClient as IAdvertisingServiceClient,
   AccountServiceClient as IAccountServiceClient,
+  DealServiceClient as IDealServiceClient,
 } from '@cig-platform/core'
 import { PoultryGenderCategoryEnum, RegisterTypeEnum, BreederContactTypeEnum } from '@cig-platform/enums'
 import { IPoultry } from '@cig-platform/types'
@@ -9,6 +10,7 @@ import { IPoultry } from '@cig-platform/types'
 import PoultryServiceClient from '@Clients/PoultryServiceClient'
 import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
 import AccountServiceClient from '@Clients/AccountServiceClient'
+import DealServiceClient from '@Clients/DealServiceClient'
 
 type Poultry = IPoultry & { mainImage: string; breederId: string }
 
@@ -16,15 +18,18 @@ export class SearchAggregator {
   private _poultryServiceClient: IPoultryServiceClient
   private _advertisingServiceClient: IAdvertisingServiceClient
   private _accountServiceClient: IAccountServiceClient
+  private _dealServiceClient: IDealServiceClient
   
   constructor(
     poultryServiceClient: IPoultryServiceClient,
     advertisingServiceClient: IAdvertisingServiceClient,
-    accountServiceClient: IAccountServiceClient
+    accountServiceClient: IAccountServiceClient,
+    dealServiceClient: IDealServiceClient
   ) {
     this._poultryServiceClient = poultryServiceClient
     this._advertisingServiceClient = advertisingServiceClient
     this._accountServiceClient = accountServiceClient
+    this._dealServiceClient = dealServiceClient
 
     this.getBreeders = this.getBreeders.bind(this)
     this.getPoultry = this.getPoultry.bind(this)
@@ -205,10 +210,14 @@ export class SearchAggregator {
 
         return { ...question, answers: answersWithUser, user }
       }))
+      const deals = await this._dealServiceClient.getDeals({ advertisingId: advertising.id })
+      const favorites = await this._advertisingServiceClient.getAdvertisingFavorites(advertising.merchantId ?? '', advertising.id)
 
       return {
         ...advertising,
-        questions: questionsWithUser
+        questions: questionsWithUser,
+        deals: deals.total,
+        favorites: favorites.length
       }
     }))
 
@@ -224,4 +233,9 @@ export class SearchAggregator {
   }
 }
 
-export default new SearchAggregator(PoultryServiceClient, AdvertisingServiceClient, AccountServiceClient)
+export default new SearchAggregator(
+  PoultryServiceClient,
+  AdvertisingServiceClient,
+  AccountServiceClient,
+  DealServiceClient
+)
