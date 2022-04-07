@@ -58,7 +58,7 @@ const poultryDocs = {
         },
         {
           type: 'string',
-          name: 'favoriteIds'
+          name: 'favoriteExternalId'
         },
       ]
     },
