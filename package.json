@@ -16,7 +16,7 @@
 	"bugs": {},
 	"homepage": "",
 	"dependencies": {
-		"@cig-platform/core": "^0.9.1",
+		"@cig-platform/core": "^0.9.2",
 		"@cig-platform/docs": "^0.4.6",
 		"@cig-platform/enums": "^0.0.6",
 		"@cig-platform/factories": "0.0.21",

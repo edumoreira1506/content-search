@@ -31,7 +31,7 @@ class SearchController {
     const prices = req?.query?.prices && JSON.parse(req.query.prices.toString())
     const sort = req?.query?.sort?.toString()
     const page = Number(req?.query?.page ?? 0)
-    const favoriteIds = req?.query?.favoriteIds?.toString()
+    const favoriteExternalId = req?.query?.favoriteExternalId?.toString()
     const data = await SearchAggregator.searchAdvertisings({
       crest,
       dewlap,
@@ -42,7 +42,7 @@ class SearchController {
       sort,
       tail,
       type,
-      favoriteIds,
+      favoriteExternalId,
       page
     })
 
