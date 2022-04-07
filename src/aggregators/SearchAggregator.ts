@@ -5,14 +5,12 @@ import {
   DealServiceClient as IDealServiceClient,
 } from '@cig-platform/core'
 import { PoultryGenderCategoryEnum, RegisterTypeEnum, BreederContactTypeEnum } from '@cig-platform/enums'
-import { IAdvertising, IPoultry } from '@cig-platform/types'
+import { IAdvertising } from '@cig-platform/types'
 
 import PoultryServiceClient from '@Clients/PoultryServiceClient'
 import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
 import AccountServiceClient from '@Clients/AccountServiceClient'
 import DealServiceClient from '@Clients/DealServiceClient'
-
-type Poultry = IPoultry & { mainImage: string; breederId: string }
 
 export class SearchAggregator {
   private _poultryServiceClient: IPoultryServiceClient
@@ -37,18 +35,6 @@ export class SearchAggregator {
     this.searchAdvertisings = this.searchAdvertisings.bind(this)
     this.getAdvertisingsHome = this.getAdvertisingsHome.bind(this)
   }
-
-  getPoultriesEntireData = async (poultries: Poultry[] = []) => Promise.all(poultries.map(async (poultry: Poultry) => {
-    const merchants = await this._advertisingServiceClient.getMerchants(poultry.breederId)
-    const breeder = await this._poultryServiceClient.getBreeder(poultry.breederId)
-
-    if (!merchants.length) return { poultry, breeder }
-
-    const advertisings = await this._advertisingServiceClient.getAdvertisings(merchants[0].id, poultry.id, false)
-    const measurementAndWeight = await this._poultryServiceClient.getRegisters(breeder.id, poultry.id, RegisterTypeEnum.MeasurementAndWeighing)
-
-    return { poultry, advertising: advertisings?.[0], breeder, measurementAndWeight: measurementAndWeight?.[0] }
-  }))
 
   getAdvertisingsEntireData = async (advertisings: IAdvertising[] = []) => Promise.all(advertisings.map(async (advertising) => {
     if (!advertising.merchantId || !advertising.externalId) return { advertising }
