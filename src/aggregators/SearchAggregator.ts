@@ -41,9 +41,9 @@ export class SearchAggregator {
 
     const merchant = await this._advertisingServiceClient.getMerchant(advertising.merchantId)
     const breeder = await this._poultryServiceClient.getBreeder(merchant.externalId)
-    const poultry = await this._poultryServiceClient.getPoultry(breeder.id, advertising.externalId)
-    const poultryImages = await this._poultryServiceClient.getPoultryImages(breeder.id, poultry.id)
-    const measurementAndWeight = await this._poultryServiceClient.getRegisters(breeder.id, poultry.id, RegisterTypeEnum.MeasurementAndWeighing)
+    const poultry = await this._poultryServiceClient.getPoultryDirectly(advertising.externalId)
+    const poultryImages = await this._poultryServiceClient.getPoultryImages((poultry as any).breederId, poultry.id)
+    const measurementAndWeight = await this._poultryServiceClient.getRegisters((poultry as any).breederId, poultry.id, RegisterTypeEnum.MeasurementAndWeighing)
 
     return {
       poultry: {
