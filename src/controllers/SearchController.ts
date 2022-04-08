@@ -46,7 +46,7 @@ class SearchController {
       page
     })
 
-    return BaseController.successResponse(res, data)
+    return BaseController.successResponse(res, data || {})
   }
 
   @BaseController.errorHandler()
