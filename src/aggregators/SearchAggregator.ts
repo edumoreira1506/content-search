@@ -190,14 +190,19 @@ export class SearchAggregator {
     const advertisingsWithQuestions = await Promise.all(advertisings.map(async advertising => {
       const questions = await this._advertisingServiceClient.getAdvertisingQuestions(merchants?.[0]?.id, advertising.id)
       const questionsWithUser = await Promise.all(questions.map(async (question) => {
-        const user = await this._accountServiceClient.getUser(question.externalId)
+        const [userId, breederId] = question.externalId.split('___')
+        const user = await this._accountServiceClient.getUser(userId)
         const answersWithUser = await Promise.all(question.answers.map(async (answer) => {
           const user = await this._accountServiceClient.getUser(answer.externalId)
 
           return { ...answer, user }
         }))
 
-        return { ...question, answers: answersWithUser, user }
+        if (!breederId)return { ...question, answers: answersWithUser, user }
+        
+        const breeder = await this._poultryServiceClient.getBreeder(breederId)
+
+        return  { ...question, answers: answersWithUser, user, breeder }
       }))
       const deals = await this._dealServiceClient.getDeals({ advertisingId: advertising.id })
       const favorites = await this._advertisingServiceClient.getAdvertisingFavorites(advertising.merchantId ?? '', advertising.id)
