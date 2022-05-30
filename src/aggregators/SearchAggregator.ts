@@ -75,11 +75,47 @@ export class SearchAggregator {
     const reproductivesWithAdvertising = await this.getAdvertisingsEntireData(reproductiveAdvertisings)
     const matrixesWithAdvertising = await this.getAdvertisingsEntireData(matrixAdvertisings)
 
+    type Carousel = {
+      title: string;
+      advertisings: typeof femaleChickensWithAdvertising
+    }
+
+    const carousels: Carousel[] = []
+
+    if (matrixesWithAdvertising?.length) {
+      carousels.push({
+        title: 'Matrizes',
+        advertisings: matrixesWithAdvertising
+      })
+    }
+
+    if (reproductivesWithAdvertising?.length) {
+      carousels.push({
+        title: 'Reprodutores',
+        advertisings: reproductivesWithAdvertising
+      })
+    }
+
+    if (maleChickensWithAdvertising?.length) {
+      carousels.push({
+        title: 'Frangos',
+        advertisings: maleChickensWithAdvertising
+      })
+    }
+
+    if (femaleChickenAdvertisings?.length) {
+      carousels.push({
+        title: 'Frangas',
+        advertisings: femaleChickensWithAdvertising
+      })
+    }
+
     return {
+      carousels,
       femaleChickens: femaleChickensWithAdvertising,
       maleChickens: maleChickensWithAdvertising,
       reproductives: reproductivesWithAdvertising,
-      matrixes: matrixesWithAdvertising
+      matrixes: matrixesWithAdvertising,
     }
   }
 
