@@ -56,7 +56,7 @@ export class SearchAggregator {
     }
   }))
 
-  async getAdvertisingsHome() {
+  async getAdvertisingsHome({ userId }: { userId?: string }) {
     const { advertisings: femaleChickenAdvertisings } = await this._advertisingServiceClient.searchAdvertisings({
       genderCategory: [PoultryGenderCategoryEnum.FemaleChicken]
     })
@@ -81,6 +81,20 @@ export class SearchAggregator {
     }
 
     const carousels: Carousel[] = []
+
+    if (userId) {
+      const { advertisings: favoriteAdvertisings } = await this._advertisingServiceClient.searchAdvertisings({
+        favoriteExternalId: userId
+      })
+      const favoritesWithAdvertising = await this.getAdvertisingsEntireData(favoriteAdvertisings)
+
+      if (favoritesWithAdvertising?.length) {
+        carousels.push({
+          title: 'Favoritos',
+          advertisings: favoritesWithAdvertising
+        })
+      }
+    }
 
     if (matrixesWithAdvertising?.length) {
       carousels.push({

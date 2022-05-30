@@ -68,6 +68,12 @@ const poultryDocs = {
       method: 'get',
       title: 'Get advertisings home',
       description: 'Route to get advertisings home',
+      queryParams: [
+        {
+          type: 'string',
+          name: 'userId'
+        }
+      ]
     },
   ]),
 }
