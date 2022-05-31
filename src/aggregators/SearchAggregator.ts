@@ -77,7 +77,8 @@ export class SearchAggregator {
 
     type Carousel = {
       title: string;
-      advertisings: typeof femaleChickensWithAdvertising
+      advertisings: typeof femaleChickensWithAdvertising,
+      identifier: string;
     }
 
     const carousels: Carousel[] = []
@@ -91,7 +92,8 @@ export class SearchAggregator {
       if (favoritesWithAdvertising?.length) {
         carousels.push({
           title: 'Favoritos',
-          advertisings: favoritesWithAdvertising
+          advertisings: favoritesWithAdvertising,
+          identifier: 'favorites'
         })
       }
     }
@@ -99,28 +101,32 @@ export class SearchAggregator {
     if (matrixesWithAdvertising?.length) {
       carousels.push({
         title: 'Matrizes',
-        advertisings: matrixesWithAdvertising
+        advertisings: matrixesWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.Matrix
       })
     }
 
     if (reproductivesWithAdvertising?.length) {
       carousels.push({
         title: 'Reprodutores',
-        advertisings: reproductivesWithAdvertising
+        advertisings: reproductivesWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.Reproductive
       })
     }
 
     if (maleChickensWithAdvertising?.length) {
       carousels.push({
         title: 'Frangos',
-        advertisings: maleChickensWithAdvertising
+        advertisings: maleChickensWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.MaleChicken
       })
     }
 
     if (femaleChickenAdvertisings?.length) {
       carousels.push({
         title: 'Frangas',
-        advertisings: femaleChickensWithAdvertising
+        advertisings: femaleChickensWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.FemaleChicken
       })
     }
 
