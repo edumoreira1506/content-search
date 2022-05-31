@@ -132,10 +132,6 @@ export class SearchAggregator {
 
     return {
       carousels,
-      femaleChickens: femaleChickensWithAdvertising,
-      maleChickens: maleChickensWithAdvertising,
-      reproductives: reproductivesWithAdvertising,
-      matrixes: matrixesWithAdvertising,
     }
   }
 
