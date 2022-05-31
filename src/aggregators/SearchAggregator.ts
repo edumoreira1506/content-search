@@ -56,7 +56,7 @@ export class SearchAggregator {
     }
   }))
 
-  async getAdvertisingsHome() {
+  async getAdvertisingsHome({ userId }: { userId?: string }) {
     const { advertisings: femaleChickenAdvertisings } = await this._advertisingServiceClient.searchAdvertisings({
       genderCategory: [PoultryGenderCategoryEnum.FemaleChicken]
     })
@@ -75,11 +75,67 @@ export class SearchAggregator {
     const reproductivesWithAdvertising = await this.getAdvertisingsEntireData(reproductiveAdvertisings)
     const matrixesWithAdvertising = await this.getAdvertisingsEntireData(matrixAdvertisings)
 
+    type Carousel = {
+      title: string;
+      advertisings: typeof femaleChickensWithAdvertising,
+      identifier: string;
+    }
+
+    const carousels: Carousel[] = []
+
+    if (userId) {
+      const { advertisings: favoriteAdvertisings } = await this._advertisingServiceClient.searchAdvertisings({
+        favoriteExternalId: userId
+      })
+      const favoritesWithAdvertising = await this.getAdvertisingsEntireData(favoriteAdvertisings)
+
+      if (favoritesWithAdvertising?.length) {
+        carousels.push({
+          title: 'Favoritos',
+          advertisings: favoritesWithAdvertising,
+          identifier: 'favorites'
+        })
+      }
+    }
+
+    if (matrixesWithAdvertising?.length) {
+      carousels.push({
+        title: 'Matrizes',
+        advertisings: matrixesWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.Matrix
+      })
+    }
+
+    if (reproductivesWithAdvertising?.length) {
+      carousels.push({
+        title: 'Reprodutores',
+        advertisings: reproductivesWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.Reproductive
+      })
+    }
+
+    if (maleChickensWithAdvertising?.length) {
+      carousels.push({
+        title: 'Frangos',
+        advertisings: maleChickensWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.MaleChicken
+      })
+    }
+
+    if (femaleChickenAdvertisings?.length) {
+      carousels.push({
+        title: 'Frangas',
+        advertisings: femaleChickensWithAdvertising,
+        identifier: PoultryGenderCategoryEnum.FemaleChicken
+      })
+    }
+
     return {
+      carousels,
       femaleChickens: femaleChickensWithAdvertising,
       maleChickens: maleChickensWithAdvertising,
       reproductives: reproductivesWithAdvertising,
-      matrixes: matrixesWithAdvertising
+      matrixes: matrixesWithAdvertising,
     }
   }
 

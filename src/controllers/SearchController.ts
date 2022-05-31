@@ -13,8 +13,9 @@ class SearchController {
   }
 
   @BaseController.errorHandler()
-  async getAdvertisingsHome(_: Request, res: Response) {
-    const data = await SearchAggregator.getAdvertisingsHome()
+  async getAdvertisingsHome(req: Request, res: Response) {
+    const userId = req?.query?.userId?.toString()
+    const data = await SearchAggregator.getAdvertisingsHome({ userId })
 
     return BaseController.successResponse(res, data)
   }
