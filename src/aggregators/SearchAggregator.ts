@@ -11,6 +11,7 @@ import PoultryServiceClient from '@Clients/PoultryServiceClient'
 import AdvertisingServiceClient from '@Clients/AdvertisingServiceClient'
 import AccountServiceClient from '@Clients/AccountServiceClient'
 import DealServiceClient from '@Clients/DealServiceClient'
+import ReviewServiceClient from '@Clients/ReviewServiceClient'
 
 export class SearchAggregator {
   private _poultryServiceClient: IPoultryServiceClient
@@ -189,8 +190,10 @@ export class SearchAggregator {
     const contacts = await this._poultryServiceClient.getContacts(breederId)
     const poultries = await this._poultryServiceClient.getPoultries(breederId, {})
     const images = await this._poultryServiceClient.getBreederImages(breederId)
+    const [merchant] = await this._advertisingServiceClient.getMerchants(breeder.id)
+    const reviews = await ReviewServiceClient.getReviews(merchant.id)
 
-    return { breeder: { ...breeder, contacts, images } , poultries }
+    return { breeder: { ...breeder, contacts, images } , poultries, reviews }
   }
 
   async getBreederPoultries(breederId: string, pagination: {
