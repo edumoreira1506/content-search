@@ -1,5 +1,6 @@
 import { SearchAggregator } from '@Aggregators/SearchAggregator'
 import { advertisingFactory, breederFactory, merchantFactory, poultryFactory, userFactory } from '@cig-platform/factories'
+import ReviewServiceClient from '@Clients/ReviewServiceClient'
 
 describe('SearchAggregator', () => {
   describe('.getBreeders', () => {
@@ -24,22 +25,30 @@ describe('SearchAggregator', () => {
   })
 
   describe('.getBreeder', () => {
-    it('returns breeders, contacts and poultries', async () => {
+    it('returns breeders, contacts, poultries and reviews', async () => {
       const breeder = breederFactory()
+      const merchant = merchantFactory()
       const contacts = [] as any[]
       const poultries = [] as any[]
+      const reviews = [] as any[]
       const mockPoultryServiceClient: any = {
         getBreeder: jest.fn().mockResolvedValue(breeder),
         getContacts: jest.fn().mockResolvedValue(contacts),
         getPoultries: jest.fn().mockResolvedValue(poultries),
         getBreederImages: jest.fn().mockResolvedValue(breeder.images)
       }
+      const mockAdvertisingServiceClient: any = {
+        getMerchants: jest.fn().mockResolvedValue([merchant])
+      }
+      const mockGetReviews = jest.fn().mockResolvedValue(reviews)
       const searchAggregator = new SearchAggregator(
         mockPoultryServiceClient,
-        {} as any,
+        mockAdvertisingServiceClient,
         {} as any,
         {} as any
       )
+
+      jest.spyOn(ReviewServiceClient, 'getReviews').mockImplementation(mockGetReviews)
 
       const data = await searchAggregator.getBreeder(breeder.id)
 
@@ -48,12 +57,14 @@ describe('SearchAggregator', () => {
           ...breeder,
           contacts
         },
-        poultries
+        poultries,
+        reviews
       })
       expect(mockPoultryServiceClient.getBreeder).toHaveBeenCalledWith(breeder.id)
       expect(mockPoultryServiceClient.getContacts).toHaveBeenCalledWith(breeder.id)
       expect(mockPoultryServiceClient.getPoultries).toHaveBeenCalledWith(breeder.id, {})
       expect(mockPoultryServiceClient.getBreederImages).toHaveBeenCalledWith(breeder.id)
+      expect(mockAdvertisingServiceClient.getMerchants).toHaveBeenCalledWith(breeder.id)
     })
   })
 
