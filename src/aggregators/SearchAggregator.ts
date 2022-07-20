@@ -192,8 +192,14 @@ export class SearchAggregator {
     const images = await this._poultryServiceClient.getBreederImages(breederId)
     const [merchant] = await this._advertisingServiceClient.getMerchants(breeder.id)
     const reviews = await ReviewServiceClient.getReviews(merchant.id)
+    const completeReviews = await Promise.all(reviews.map(async review => {
+      const merchantReviewer = await this._advertisingServiceClient.getMerchant(review.reviewerMerchantId)
+      const breederReviewer = await this._poultryServiceClient.getBreeder(merchantReviewer.externalId)
 
-    return { breeder: { ...breeder, contacts, images } , poultries, reviews }
+      return { ...review, breederReviewer }
+    }))
+
+    return { breeder: { ...breeder, contacts, images } , poultries, reviews: completeReviews }
   }
 
   async getBreederPoultries(breederId: string, pagination: {
