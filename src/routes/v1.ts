@@ -22,4 +22,6 @@ router.get('/breeders/:breederId/poultries', SearchController.getBreederPoultrie
 
 router.get('/breeders/:breederId/poultries/:poultryId', SearchController.getPoultry)
 
+router.get('/breeders/:breederId/poultries/:poultryId/parents', SearchController.getPoultryParents)
+
 export default router

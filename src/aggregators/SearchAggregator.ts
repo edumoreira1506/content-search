@@ -31,6 +31,7 @@ export class SearchAggregator {
     this._dealServiceClient = dealServiceClient
 
     this.getBreeders = this.getBreeders.bind(this)
+    this.getPoultryParents = this.getPoultryParents.bind(this)
     this.getPoultry = this.getPoultry.bind(this)
     this.getBreeder = this.getBreeder.bind(this)
     this.searchAdvertisings = this.searchAdvertisings.bind(this)
@@ -284,6 +285,15 @@ export class SearchAggregator {
       measurementAndWeigthing,
       whatsAppContacts,
       breeder
+    }
+  }
+
+  async getPoultryParents(breederId: string, poultryId: string) {
+    const poultry = await this._poultryServiceClient.getPoultry(breederId, poultryId)
+
+    return {
+      dad: poultry.dad,
+      mom: poultry.mom
     }
   }
 }

@@ -76,6 +76,15 @@ const poultryDocs = {
       ]
     },
   ]),
+  ...createDoc('/breeders/{breederId}/poultries/{poultryId}/parents', ['Poultries'], [
+    {
+      method: 'get',
+      title: 'Get poultry parents',
+      description: 'Route to get poultry parents',
+    }
+  ], {
+    pathVariables: [{ type: 'string', name: 'breederId' }, { type: 'string', name: 'poultryId' }]
+  }),
 }
 
 export default poultryDocs

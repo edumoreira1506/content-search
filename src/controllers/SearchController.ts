@@ -10,6 +10,7 @@ class SearchController {
     this.getPoultry = this.getPoultry.bind(this)
     this.getAdvertisings = this.getAdvertisings.bind(this)
     this.getAdvertisingsHome = this.getAdvertisingsHome.bind(this)
+    this.getPoultryParents = this.getPoultryParents.bind(this)
   }
 
   @BaseController.errorHandler()
@@ -80,6 +81,15 @@ class SearchController {
     const breederId = req?.params?.breederId
     const poultryId = req?.params?.poultryId
     const data = await SearchAggregator.getPoultry(breederId, poultryId)
+
+    return BaseController.successResponse(res, data)
+  }
+
+  @BaseController.errorHandler()
+  async getPoultryParents(req: Request, res: Response) {
+    const breederId = req?.params?.breederId
+    const poultryId = req?.params?.poultryId
+    const data = await SearchAggregator.getPoultryParents(breederId, poultryId)
 
     return BaseController.successResponse(res, data)
   }
