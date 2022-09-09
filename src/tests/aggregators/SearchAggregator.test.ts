@@ -109,7 +109,7 @@ describe('SearchAggregator', () => {
           females: 1
         }
       })
-      expect(mockPoultryServiceClient.getPoultries).toHaveBeenCalledTimes(5)
+      expect(mockPoultryServiceClient.getPoultries).toHaveBeenCalledTimes(6)
       expect(mockAdvertisingServiceClient.getAdvertisings).toHaveBeenCalledWith(merchant.id, undefined, false)
       expect(mockAdvertisingServiceClient.getMerchants).toHaveBeenCalledWith(breeder.id)
     })
