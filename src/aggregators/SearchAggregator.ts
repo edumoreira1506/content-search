@@ -209,18 +209,41 @@ export class SearchAggregator {
     matrixes?: number;
     males?: number;
     females?: number;
-  } = {}) {
+  } = {}, keyword = '') {
     const merchants = await this._advertisingServiceClient.getMerchants(breederId)
     const merchant = merchants[0]
     const advertisings = await this._advertisingServiceClient.getAdvertisings(merchant.id, undefined, false)
     const poultryIds = advertisings.map(a => a.externalId).join(',')
     const { poultries: forSale, pages: forSalePages } = poultryIds.length
-      ? await this._poultryServiceClient.getPoultries(breederId, { poultryIds, page: pagination.forSale })
+      ? await this._poultryServiceClient.getPoultries(breederId, {
+        poultryIds,
+        page: pagination.forSale,
+        name: keyword
+      })
       : { poultries: [], pages: 0 }
-    const { poultries: reproductives, pages: reproductivesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Reproductive, page: pagination.reproductives })
-    const { poultries: matrixes, pages: matrixesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.Matrix, page: pagination.matrixes })
-    const { poultries: males, pages: malesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.MaleChicken, page: pagination.males })
-    const { poultries: females, pages: femalesPages } = await this._poultryServiceClient.getPoultries(breederId, { genderCategory: PoultryGenderCategoryEnum.FemaleChicken, page: pagination.females })
+    const { poultries: reproductives, pages: reproductivesPages } = await this._poultryServiceClient.getPoultries(breederId, {
+      genderCategory: PoultryGenderCategoryEnum.Reproductive,
+      page: pagination.reproductives,
+      name: keyword
+    })
+    const { poultries: matrixes, pages: matrixesPages } = await this._poultryServiceClient.getPoultries(breederId, {
+      genderCategory: PoultryGenderCategoryEnum.Matrix,
+      page: pagination.matrixes,
+      name: keyword
+    })
+    const { poultries: males, pages: malesPages } = await this._poultryServiceClient.getPoultries(breederId, {
+      genderCategory: PoultryGenderCategoryEnum.MaleChicken,
+      page: pagination.males,
+      name: keyword
+    })
+    const { poultries: females, pages: femalesPages } = await this._poultryServiceClient.getPoultries(breederId, {
+      genderCategory: PoultryGenderCategoryEnum.FemaleChicken,
+      page: pagination.females,
+      name: keyword
+    })
+    const { poultries: allPoultriesMixed } = await this._poultryServiceClient.getPoultries(breederId, {
+      name: keyword
+    })
 
     return {
       forSale,
@@ -228,6 +251,7 @@ export class SearchAggregator {
       matrixes,
       males,
       females,
+      all: allPoultriesMixed,
       pagination: {
         forSale: forSalePages,
         reproductives: reproductivesPages,
