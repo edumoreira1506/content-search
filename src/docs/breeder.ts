@@ -25,6 +25,7 @@ const breederDocs = {
       description: 'Route to get breeder poultries',
       queryParams: [
         { type: 'string', name: 'pagination' },
+        { type: 'string', name: 'keyword' },
       ]
     }
   ], {
